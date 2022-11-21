@@ -1,0 +1,8 @@
+.home {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: aliceblue;
+  padding: 200px 0px 0px 300px;
+}
