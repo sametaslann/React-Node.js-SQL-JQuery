@@ -9,7 +9,9 @@ import "datatables.net-dt/css/jquery.dataTables.min.css";
 import "../../App.css";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import { PersonOff } from "@mui/icons-material";
 
+//Data checki düzgün yap
 function AddPerson() {
   const [dataCheck, setDataCheck] = useState(false);
   const [employees, setEmployees] = useState([]);
@@ -21,24 +23,26 @@ function AddPerson() {
     Gender: true,
   };
   const [person, setPerson] = useState(initialPerson);
+  const [lastPerson, setLastPerson] = useState(0);
 
   useEffect(() => {
     setDataCheck(false);
     console.log(dataCheck);
     setTimeout(() => {
-      $("#dataTable").DataTable().destroy();
       handleFetch();
-    }, 1000);
+      $("#dataTable").DataTable().destroy();
+      console.log(employees);
+    }, 100);
   }, []);
 
   useEffect(() => {
-    $(document).ready(function () {
+    console.log(employees);
+    $(document).ready(function async() {
       $("#table").DataTable();
     });
   }, [employees]);
 
-  const handleFetch = async () => {
-    console.log(dataCheck);
+  const handleFetch = () => {
     const getDatas = async () => {
       const newData = await fetch("/getEmp", {
         method: "GET",
@@ -46,17 +50,21 @@ function AddPerson() {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-      }).then((res) => res.json());
+      })
+        .then((res) => res.json())
+        .then((data) => setEmployees(data));
 
-      setEmployees(newData);
-      console.log(employees);
+      // setEmployees(newData);
       setDataCheck(true);
+      console.log(dataCheck);
+
+      console.log(newData);
     };
     getDatas();
+    console.log(employees);
   };
 
   const setForm = (e) => {
-    console.log(e.target.value);
     const { name, value } = e.target;
     if (name === "EmployeeID" || name === "Age") {
       setPerson((prevState) => ({
@@ -75,7 +83,7 @@ function AddPerson() {
   const postData = (event) => {
     event.preventDefault();
 
-    const newData = fetch("/api", {
+    fetch("/api", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,16 +93,18 @@ function AddPerson() {
         ...person,
       }),
     })
-      .then((res) => res.json())
+      .then((res) => console.log(res.json()))
       .catch((err) => console.log("Boş olamaz"));
 
-    console.log(person);
-
+    handleFetch();
     setDataCheck(false);
-    console.log(newData);
+    console.log(dataCheck);
+    setLastPerson(person.EmployeeID);
+
+    console.log("Posted Data and Fetched");
+
     console.log(dataCheck);
     setEmployees(initialPerson);
-    handleFetch();
   };
 
   const showAlert = (employee) => {
@@ -104,7 +114,11 @@ function AddPerson() {
       buttons: [
         {
           label: "Yes",
-          onClick: () => handleDeleteButton(employee),
+          onClick: () => {
+            handleDeleteButton(employee);
+            handleFetch();
+            setDataCheck(true);
+          },
         },
         {
           label: "No",
@@ -120,8 +134,7 @@ function AddPerson() {
     setDataCheck(false);
     console.log(employee);
 
-    console.log("Deleted");
-    const newData = await fetch("/deleteEmp", {
+    await fetch("/deleteEmp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -135,8 +148,12 @@ function AddPerson() {
       .catch((err) => console.log(err));
 
     handleFetch();
+    console.log("Deleted");
   };
 
+  {
+    console.log(dataCheck);
+  }
   if (dataCheck) {
     return (
       <>
@@ -214,7 +231,7 @@ function AddPerson() {
               {employees.map((employee, i) => (
                 <tr
                   key={i}
-                  className={i == employees.length - 1 ? "fireRow" : ""}
+                  className={employee.EmployeeID == lastPerson ? "fireRow" : ""}
                 >
                   <td>{employee.EmployeeID}</td>
                   <td>{employee.Firstname}</td>

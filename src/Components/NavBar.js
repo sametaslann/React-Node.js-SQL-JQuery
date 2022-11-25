@@ -3,8 +3,17 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { LinkContainer } from "react-router-bootstrap";
+import { useState, useEffect } from "react";
+
+import { ReactComponent as ClockIcon } from "../Assets/icons/clock.svg";
+import { ReactComponent as CalenderIcon } from "../Assets/icons/calendar.svg";
 
 function NavBar() {
+  const [dateState, setDateState] = useState(new Date());
+  useEffect(() => {
+    setInterval(() => setDateState(new Date()), 1);
+  }, []);
+
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
       <Container>

@@ -5,17 +5,24 @@ body {
   overflow-x: hidden;
   position: relative;
   background-color: #212529;
-
   font-family: "Centra", sans-serif !important;
 }
 
 nav.navbar {
   background-color: transparent !important;
-  padding: 25px 0;
+  padding: 40px 0;
   position: fixed;
   width: 100%;
-  z-index: 9999;
+  z-index: 2;
   transition: 0.32s ease-in-out;
+}
+
+.container,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl {
+  max-width: 1840px;
 }
 
 nav.navbar.scrolled {
@@ -25,6 +32,12 @@ nav.navbar.scrolled {
 
 nav.navbar a.navbar-brand {
   width: 12%;
+  font-size: x-large !important;
+}
+.nav-link {
+  margin-right: 20px;
+  position: relative;
+  font-size: large !important;
 }
 
 .banner {
@@ -34,6 +47,7 @@ nav.navbar a.navbar-brand {
   align-items: center;
   text-align: center;
   padding-top: 200px;
+  z-index: 9999;
 }
 .banner input {
   background-color: rgb(250, 251, 252);
